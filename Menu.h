@@ -36,9 +36,13 @@ typedef enum {
 
 typedef void (*menu_callback_t)(void); // Void Callback
 
-typedef struct MenuData
+struct MenuData
 {
-    MenuData() { n_options = 0; title = NULL; }
+    MenuData()
+    {
+        n_options = 0; 
+        title = NULL;
+    }
     char **option_titles;   // titulos de cada opcion    
     char *title;            // Titulo del menu
     uint8_t n_options;      // cantidad de opciones
@@ -60,7 +64,8 @@ public:
      * @param action accion que realizara el menu cuando se ejecuta la funcion "menu_back()"
      * 
      */
-    Menu(uint8_t options, char* title, menu_callback_t on_exit, menu_action_t action);
+    Menu(uint8_t options, char* title, menu_callback_t on_exit = NULL, 
+         menu_action_t action = MENU_ACTION_DO_NOTHING);
     ~Menu();
 
     /**
@@ -73,17 +78,6 @@ public:
      */
     void set_option(uint8_t option_id, char* title, menu_callback_t callback);
 
-    /**
-     * @brief Configurar escucha de eventos de control y funciones de visualizacion del menu
-     * - EJEMPLO:     menu_set_event_listener_display(keyboard_read, display_update);
-     * 
-     * @param ev_listener funcion que se ejecuta en TIEMPO REAL para escuchar nuevos eventos (ej: clicks de teclado)
-     *                      Colocar por ejemplo, un callback de lectura del joystick
-     * @param update_display funcion que se ejecuta cada vez que se deberia actualizar el display que muestra el menu.
-     *                      Dentro de esta funcion se deberia llamar menu_get_current_menu_data() para obtener
-     *                      los datos del menu actual y asi poder mostrarlos al usuario.
-     */
-    void set_event_listener_display(menu_callback_t ev_listener, menu_callback_t update_display);
 
 // (2) FUNCIONES DE MENU
 
@@ -111,6 +105,8 @@ public:
     void go_select();
     void go_back();
 
+    bool enable_option_roll = false;
+
 private:
     char **option_titles = NULL;   // titulos de cada opcion
     menu_callback_t *option_callbacks = NULL; // callbacks de cada opcion
@@ -120,9 +116,21 @@ private:
     uint8_t n_options = 0;      // cantidad de opciones
     menu_action_t exit_action = MENU_ACTION_DO_NOTHING;  // accion de salida
     void (*on_exit)(void) = NULL; // callback de salida
+
 };
 
 void set_animation_callback(menu_callback_t animation_f); // OPCIONAL. Loop en tiempo real
+/**
+ * @brief Configurar escucha de eventos de control y funciones de visualizacion del menu
+ * - EJEMPLO:     menu_set_event_listener_display(keyboard_read, display_update);
+ * 
+ * @param ev_listener funcion que se ejecuta en TIEMPO REAL para escuchar nuevos eventos (ej: clicks de teclado)
+ *                      Colocar por ejemplo, un callback de lectura del joystick
+ * @param update_display funcion que se ejecuta cada vez que se deberia actualizar el display que muestra el menu.
+ *                      Dentro de esta funcion se deberia llamar menu_get_current_menu_data() para obtener
+ *                      los datos del menu actual y asi poder mostrarlos al usuario.
+ */
+void menu_set_event_listener_display(menu_callback_t ev_listener, menu_callback_t update_display);
 
 // (3) FUNCIONES PARA NAVEGAR EN EL MENU (colocar en un callback asociado a un evento de control. ej: Teclado, Joystick)
 void menu_go_up(void);     // Ir a opcion superior

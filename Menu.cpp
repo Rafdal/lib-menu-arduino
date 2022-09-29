@@ -66,11 +66,15 @@ void Menu::run(){
             case MENU_STATE_DOWN: // Ir a la opcion inferior
                 if(current_option < n_options-1)
                     current_option++;
+                else if(current_option == (n_options-1) && enable_option_roll)
+                    current_option = 0;
                 break;
 
             case MENU_STATE_UP: // Ir a la opcion superior
                 if(current_option >0)
                     current_option--;
+                else if( current_option == 0 && enable_option_roll)
+                    current_option = n_options - 1;
                 break;
 
             case MENU_STATE_SELECT: // Seleccionar la opcion actual
