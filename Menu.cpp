@@ -23,10 +23,10 @@ Menu::Menu(uint8_t options, char* title, menu_callback_t on_exit, menu_action_t 
         free(option_callbacks);
     }else{
         // Asignar los datos
-        title = title;
+        this->title = title;
         current_option = 0;
         n_options = options;
-        on_exit = on_exit;
+        this->on_exit = on_exit;
         exit_action = action;
     }
 }
