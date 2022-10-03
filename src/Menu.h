@@ -13,7 +13,7 @@
  * mostrarlos por pantalla (lista de opciones, opcion seleccionada, titulo, etc)*
  *                                                                              *
  * Esta libreria NO cumple funciones de frontend, el programador decide como    *
- * conectar esta libreria con el frontend y que interfaz usara                  *
+ * conectar esta libreria con el frontend y que interfaz va a usar              *
  ********************************************************************************
  */
 
@@ -36,47 +36,42 @@ typedef enum {
 
 typedef void (*menu_callback_t)(void); // Void Callback
 
+// Datos del menu para mostrar en el display
 struct MenuData
 {
-    MenuData()
-    {
-        n_options = 0; 
-        title = NULL;
-    }
+    MenuData(){ n_options = 0; title = NULL; }
     char **option_titles;   // titulos de cada opcion    
-    char *title;            // Titulo del menu
+    const char *title;      // Titulo del menu
     uint8_t n_options;      // cantidad de opciones
     uint8_t current_option; // opcion actual
 };
 
+
 class Menu
 {
-    
 public:
     /**
-     * @brief Inicializar menu. Se ejecuta una sola vez al principio del programa, en la configuracion
-     * 
-     * - EJEMPLO: menu_t *cfg_menu = menu_init(3, "Config", NULL, MENU_ACTION_JUST_EXIT);
+     * @brief Instanciar menu. Se ejecuta una sola vez al principio del programa.
      * 
      * @param options cantidad de opciones que tendra el menu (numero entero > 0)
      * @param title titulo del menu (c-string)
-     * @param on_exit funcion que se ejecuta al salir del menu. Colocar NULL para NO usar.
-     * @param action accion que realizara el menu cuando se ejecuta la funcion "menu_back()"
+     * @param on_exit (Opcional) funcion callback que se ejecuta al salir del menu.
+     * @param action (Opcional) accion que realiza el menu al ejecutar la funcion "menu_back()"
      * 
      */
-    Menu(uint8_t options, char* title, menu_callback_t on_exit = NULL, 
+    Menu(uint8_t options, const char* title, menu_callback_t on_exit = NULL, 
          menu_action_t action = MENU_ACTION_DO_NOTHING);
     ~Menu();
 
     /**
      * @brief Configurar una opcion de un menu
-     * - EJEMPLO:     menu_set_option(cfg_menu, 0, "Save data", config_save_data);
+     * - EJEMPLO:     menu.set_option(0, "Start", start_callback);
      * 
      * @param option_id numero de opcion que desea configurar (entre 0 y la cant. de opciones que tiene dicho menu)
      * @param title titulo de la opcion (c-string)
-     * @param callback funcion que se ejecuta al seleccionar la opcion
+     * @param callback funcion callback que se ejecuta al seleccionar la opcion
      */
-    void set_option(uint8_t option_id, char* title, menu_callback_t callback);
+    void set_option(uint8_t option_id, const char* title, menu_callback_t callback);
 
 
 // (2) FUNCIONES DE MENU
@@ -85,10 +80,12 @@ public:
      * @brief BLOQUEANTE - ejecuta y abre un menu. El programa queda atrapado dentro del mismo hasta que se cierre
      */
     void run();
+
     /**
      * @brief Cerrar el menu indicado
      */
     void force_close();
+
     /**
      * @brief Consultar si el menu esta activo
      * 
@@ -97,29 +94,41 @@ public:
      */
     bool is_available();
 
+    /**
+     * @brief Get the menu state (Ignore this)
+     * 
+     * @return uint8_t menu state
+     */
     uint8_t getState() { return state; }
+
+    /**
+     * @brief Get the Menu Data (useful for display or frontend)
+     * 
+     * @return MenuData struct with menu title, option titles, option_id, etc
+     */
     MenuData getData();
 
+    // Controles del menu
     void go_up();
     void go_down();
     void go_select();
     void go_back();
 
-    bool enable_option_roll = false;
+    bool enable_option_roll = false; // Al llegar a la opcion final y avanzar, vuelve a la primera
 
 private:
-    char **option_titles = NULL;   // titulos de cada opcion
-    menu_callback_t *option_callbacks = NULL; // callbacks de cada opcion
-    uint8_t current_option = 0; // opcion actual
-    uint8_t state = MENU_STATE_CLOSE;          // evento (estado) actual
-    char *title = NULL;            // Titulo del menu
-    uint8_t n_options = 0;      // cantidad de opciones
-    menu_action_t exit_action = MENU_ACTION_DO_NOTHING;  // accion de salida
-    void (*on_exit)(void) = NULL; // callback de salida
+    char **option_titles = NULL;                        // titulos de cada opcion
+    menu_callback_t *option_callbacks = NULL;           // callbacks de cada opcion
+    uint8_t current_option = 0;                         // opcion actual
+    uint8_t state = MENU_STATE_CLOSE;                   // evento (estado) actual
+    const char *title;                                  // Titulo del menu
+    uint8_t n_options = 0;                              // cantidad de opciones
+    menu_action_t exit_action = MENU_ACTION_DO_NOTHING; // accion de salida
+    void (*on_exit)(void) = NULL;                       // callback de salida
 
 };
 
-void set_animation_callback(menu_callback_t animation_f); // OPCIONAL. Loop en tiempo real
+
 /**
  * @brief Configurar escucha de eventos de control y funciones de visualizacion del menu
  * - EJEMPLO:     menu_set_event_listener_display(keyboard_read, display_update);
@@ -131,6 +140,13 @@ void set_animation_callback(menu_callback_t animation_f); // OPCIONAL. Loop en t
  *                      los datos del menu actual y asi poder mostrarlos al usuario.
  */
 void menu_set_event_listener_display(menu_callback_t ev_listener, menu_callback_t update_display);
+
+/**
+ * @brief (Opcional) Setear un loop en tiempo real para animaciones
+ * 
+ * @param f funcion callback
+ */
+void menu_set_real_time_loop(menu_callback_t f);
 
 // (3) FUNCIONES PARA NAVEGAR EN EL MENU (colocar en un callback asociado a un evento de control. ej: Teclado, Joystick)
 void menu_go_up(void);     // Ir a opcion superior

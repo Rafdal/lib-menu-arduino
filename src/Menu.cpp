@@ -7,23 +7,25 @@ static menu_callback_t event_listener = NULL; // Callback lector de nuevos event
 static menu_callback_t update_display = NULL; // Callback para actualizar datos de interfaz de usuario
 static menu_callback_t display_animations = NULL; // Callback ejecutada en tiempo real (OPCIONAL)
 
+static menu_callback_t realTimeLoop = NULL;
+
 static Menu *current_menu = NULL;    // Puntero al menu del contexto actual (en ejecucion)
 
+
 // Inicializar un menu
-Menu::Menu(uint8_t options, char* title, menu_callback_t on_exit, menu_action_t action)
+Menu::Menu(uint8_t options, const char* title, menu_callback_t on_exit, menu_action_t action) : title(title)
 {
     // Asignar memoria a los arreglos de informacion de las opciones
     option_titles = (char**) calloc(options, sizeof(char*));
     option_callbacks = (menu_callback_t*) calloc(options, sizeof(menu_callback_t));
 
-    // FIXME
-    // Si ocurre un error liberar todo (ESTO NO DEBERIA PASAR)
+    // FIXME: Sacar los callocs y pasar a todo a new
+    // Si ocurre un error liberar todo (ESTO NO DEBERIA PASAR EN C++)
     if(option_titles == NULL || option_callbacks == NULL){
         free(option_titles);
         free(option_callbacks);
     }else{
         // Asignar los datos
-        this->title = title;
         current_option = 0;
         n_options = options;
         this->on_exit = on_exit;
@@ -37,8 +39,8 @@ Menu::~Menu()
     free(option_callbacks);
 }
 
-void Menu::set_option(uint8_t option_id, char* title, menu_callback_t callback){
-    option_titles[option_id] = title;
+void Menu::set_option(uint8_t option_id, const char* title, menu_callback_t callback){
+    option_titles[option_id] = const_cast<char*>(title);
     option_callbacks[option_id] = callback;
 }
 
@@ -112,6 +114,8 @@ void Menu::run(){
 
             if(display_animations != NULL)
                 display_animations(); // Si hay animaciones, ejecutar
+            if(realTimeLoop != NULL)
+                realTimeLoop();
 
             // Si estamos en un estado de transicion, actualizamos el display
             if(state != MENU_STATE_AVAILABLE && state != MENU_STATE_CLOSE){
@@ -168,6 +172,10 @@ void menu_set_event_listener_display(menu_callback_t ev_listener, menu_callback_
     update_display = _update_display;
 }
 
+void menu_set_real_time_loop(menu_callback_t f)
+{
+    realTimeLoop = f;
+}
 
 void menu_go_up(void){
     current_menu->go_up();
