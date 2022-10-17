@@ -79,7 +79,7 @@ public:
     /**
      * @brief BLOQUEANTE - ejecuta y abre un menu. El programa queda atrapado dentro del mismo hasta que se cierre
      */
-    void run();
+    virtual void run();
 
     /**
      * @brief Cerrar el menu indicado
@@ -116,8 +116,10 @@ public:
 
     bool enable_option_roll = false; // Al llegar a la opcion final y avanzar, vuelve a la primera
 
-private:
+protected:
     char **option_titles = NULL;                        // titulos de cada opcion
+
+private:
     menu_callback_t *option_callbacks = NULL;           // callbacks de cada opcion
     uint8_t current_option = 0;                         // opcion actual
     uint8_t state = MENU_STATE_CLOSE;                   // evento (estado) actual
