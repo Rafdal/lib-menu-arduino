@@ -144,7 +144,7 @@ private:
 void menu_set_event_listener_display(menu_callback_t ev_listener, menu_callback_t update_display);
 
 /**
- * @brief (Opcional) Setear un loop en tiempo real para animaciones
+ * @brief (Opcional) Setear un loop en tiempo real
  * 
  * @param f funcion callback
  */

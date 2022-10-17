@@ -1,13 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-// #include <assert.h>
 #include "Menu.h"
 
 static menu_callback_t event_listener = NULL; // Callback lector de nuevos eventos
 static menu_callback_t update_display = NULL; // Callback para actualizar datos de interfaz de usuario
-static menu_callback_t display_animations = NULL; // Callback ejecutada en tiempo real (OPCIONAL)
 
-static menu_callback_t realTimeLoop = NULL;
+static menu_callback_t realTimeLoop = NULL; // Callback en tiempo real (OPCIONAL)
 
 static Menu *current_menu = NULL;    // Puntero al menu del contexto actual (en ejecucion)
 
@@ -112,9 +108,7 @@ void Menu::run(){
                 break;
             }
 
-            if(display_animations != NULL)
-                display_animations(); // Si hay animaciones, ejecutar
-            if(realTimeLoop != NULL)
+            if(realTimeLoop != NULL) // Si hay loop en tiempo real, ejecutar
                 realTimeLoop();
 
             // Si estamos en un estado de transicion, actualizamos el display
@@ -161,17 +155,12 @@ void Menu::force_close(){
     state = MENU_STATE_CLOSE;
 }
 
-
-// OPCIONAL. Loop en tiempo real para animaciones (usado en raspberry pi)
-void menu_set_animation_callback(menu_callback_t animation_f){
-    display_animations = animation_f;
-}
-
 void menu_set_event_listener_display(menu_callback_t ev_listener, menu_callback_t _update_display){
     event_listener = ev_listener;
     update_display = _update_display;
 }
 
+// OPCIONAL. Loop en tiempo real 
 void menu_set_real_time_loop(menu_callback_t f)
 {
     realTimeLoop = f;
