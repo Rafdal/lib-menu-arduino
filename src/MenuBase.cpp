@@ -16,6 +16,29 @@ MenuBase *MenuBase::current_menu = NULL;    // Puntero al menu del contexto actu
 
 bool MenuBase::debug_enabled = false; // Variable para habilitar/deshabilitar debug
 
+void MenuBase::run(void){
+    // Sin los callbacks event_listener y update_display, el menu no funciona!
+    if(event_listener != NULL && update_display != NULL){
+        state = MENU_STATE_OPEN; // Activar el menu
+
+        while (state != MENU_STATE_CLOSE) // Mientras el menu no se haya cerrado o este cerrado
+        {        
+            event_listener();                   // escuchar cambios de estado (bajar,seleccionar,cerrar,etc)
+
+            fsm();  // Implementacion definida por el usuario
+
+            // Si estamos en un estado de transicion, actualizamos el display
+            if(state != MENU_STATE_AVAILABLE && state != MENU_STATE_CLOSE){
+                state = MENU_STATE_AVAILABLE;
+                update_display();
+            }
+
+            if(realTimeLoop != NULL) // Si hay loop en tiempo real, ejecutar
+                realTimeLoop();
+        }
+    }
+}
+
 void MenuBase::go_up(void){
     if (state != MENU_STATE_AVAILABLE)
     {
@@ -168,101 +191,8 @@ MenuData MenuBase::menu_get_current_data(void){
     return MenuData();
 }
 
-DisplayData MenuBase::menu_get_current_display_data(void)
-{
-    DisplayData displayData;
-    if(current_menu != NULL) {
-        MenuData data = current_menu->getData();
-        uint8_t rows = display_max_lines;
-
-        switch(display_type) {
-            case MENU_DISPLAY_TYPE_LCD_16x2:
-            case MENU_DISPLAY_TYPE_LCD_20x4:
-                break;
-            case MENU_DISPLAY_TYPE_CUSTOM:
-            case MENU_DISPLAY_TYPE_SERIAL:
-            default:
-                if (debug_enabled) {
-                    Serial.println(F("menu_get_current_display_data() - Unsupported display type for automatic display data generation"));
-                }
-                return DisplayData(); // Unknown type
-        }
-
-        for (uint8_t i = 0; i < rows; i++)
-            memset(display_lines[i], 0, display_line_width + 1); // Clear line
-
-        if (display_show_title)
-            strncpy(display_lines[0], data.title, display_line_width);
-
-        if (debug_enabled) {
-            Serial.println(data.title);
-        }
-        uint8_t title_offset = (display_show_title) ? 1 : 0;
-
-        for (uint8_t i = title_offset; i < rows; i++) {
-            uint8_t option_index = i - title_offset + data.display_offset;
-            strcat(display_lines[i], (option_index == data.current_option) ? ">" : " "); // Leading space for selection indicator
-            strncat(display_lines[i], data.option_titles[option_index], display_line_width - 1);
-            if (debug_enabled) {
-                Serial.println(display_lines[i]);
-            }
-        }
-        displayData.lines = display_lines;
-        displayData.n_lines = rows;
-    }
-    return displayData;
-}
-
-DisplayData MenuBase::menu_get_current_display_data_legacy(void)
-{
-    DisplayData displayData;
-    if(current_menu != NULL) {
-        MenuData data = current_menu->getData();
-        uint8_t rows = display_max_lines;
-
-        switch(display_type) {
-            case MENU_DISPLAY_TYPE_LCD_16x2:
-            case MENU_DISPLAY_TYPE_LCD_20x4:
-                break;
-            case MENU_DISPLAY_TYPE_CUSTOM:
-            case MENU_DISPLAY_TYPE_SERIAL:
-            default:
-                if (debug_enabled) {
-                    Serial.println(F("menu_get_current_display_data() - Unsupported display type for automatic display data generation"));
-                }
-                return DisplayData(); // Unknown type
-        }
-
-        for (uint8_t i = 0; i < rows; i++)
-            memset(display_lines[i], 0, display_line_width + 1); // Clear line
-
-        uint8_t title_offset = (display_show_title) ? 1 : 0;
-        if (display_show_title)
-            strncpy(display_lines[0], data.title, display_line_width);
-
-        uint8_t offset = (data.current_option > (rows - 1 - title_offset)) ? (data.current_option - (rows - 1 - title_offset)) : 0;
-        uint8_t end_option = (data.n_options > (rows - title_offset)) ? (rows - title_offset) : data.n_options;
-
-        if (debug_enabled) {
-            Serial.println(data.title);
-            Serial.print(F("\toffset: ")); Serial.print(offset);
-            Serial.print(F(" | end_option: ")); Serial.print(end_option);
-            Serial.print(F(" | current_option: ")); Serial.print(data.current_option);
-            Serial.print(F(" | n_options: ")); Serial.println(data.n_options);
-            Serial.print(F("\tdisplay_offset: ")); Serial.println(data.display_offset);
-        }
-
-        for (uint8_t i = 0; i < end_option; i++) {
-            strcat(display_lines[i + title_offset], (i + offset == data.current_option) ? ">" : " "); // Leading space for selection indicator
-            strncat(display_lines[i + title_offset], data.option_titles[i + offset], display_line_width - 1);
-            if (debug_enabled) {
-                Serial.println(display_lines[i + title_offset]);
-            }
-        }
-        displayData.lines = display_lines;
-        displayData.n_lines = rows;
-    }
-    return displayData;
+DisplayData MenuBase::menu_get_current_display_data(void){
+    return current_menu->getDisplayData();
 }
 
 bool MenuBase::menu_is_current_available(void){
@@ -272,9 +202,6 @@ bool MenuBase::menu_is_current_available(void){
 void MenuBase::menu_force_close_current(void){
     current_menu->force_close();
 }
-
-
-
 
 
 
@@ -336,7 +263,7 @@ DisplayData menu_get_current_display_data(void)
 {
     return MenuBase::menu_get_current_display_data();
 }
-DisplayData menu_get_current_display_data_legacy(void)
-{
-    return MenuBase::menu_get_current_display_data_legacy();
-}
+// DisplayData menu_get_current_display_data_legacy(void)
+// {
+//     return MenuBase::menu_get_current_display_data_legacy();
+// }

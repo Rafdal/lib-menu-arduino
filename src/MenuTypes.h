@@ -28,13 +28,13 @@ typedef enum {
 typedef enum {
     MENU_STATE_CLOSE,       // Cerrar menu | menu cerrado
     MENU_STATE_AVAILABLE,   // Menu activo en espera
-    MENU_STATE_UP,      // Ir a la opcion superior (estado de transicion)
-    MENU_STATE_DOWN,    // Ir a la opcion inferior (estado de transicion)
-    MENU_STATE_LEFT,    // Ir a la opcion izquierda (estado de transicion)
-    MENU_STATE_RIGHT,   // Ir a la opcion derecha (estado de transicion)
-    MENU_STATE_BACK,    // Ir hacia atras (estado de transicion)
-    MENU_STATE_SELECT,   // Seleccionar opcion (estado de transicion)
-    MENU_STATE_OPEN,    // Abrir menu (estado de transicion)
+    MENU_STATE_UP,      // Ir a la opcion superior (estado de transicion grafica)
+    MENU_STATE_DOWN,    // Ir a la opcion inferior (estado de transicion grafica)
+    MENU_STATE_LEFT,    // Ir a la opcion izquierda (estado de transicion grafica)
+    MENU_STATE_RIGHT,   // Ir a la opcion derecha (estado de transicion grafica)
+    MENU_STATE_BACK,    // Ir hacia atras (estado de transicion grafica)
+    MENU_STATE_SELECT,   // Seleccionar opcion (estado de transicion grafica)
+    MENU_STATE_OPEN,    // Abrir menu (estado de transicion grafica)
 } menu_state_t;
 
 // Datos del menu para mostrar en el display

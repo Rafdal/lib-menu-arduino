@@ -11,7 +11,10 @@ public:
     MenuBase(const char* title) : title(title) {}
     virtual ~MenuBase() {}
 
-    virtual void run() = 0;
+    /**
+     * @brief BLOQUEANTE - ejecuta y abre un menu. El programa queda atrapado dentro del mismo hasta que se cierre
+     */
+    void run();
 
     /**
      * @brief Cerrar el menu indicado
@@ -49,6 +52,8 @@ public:
     void go_back();
 
 protected:
+    virtual void fsm() = 0;
+    virtual DisplayData getDisplayData() = 0;
     uint8_t state = MENU_STATE_CLOSE;                   // evento (estado) actual
     const char *title;                                  // Titulo del menu
 
@@ -85,7 +90,7 @@ public:
     static void menu_force_close_current(void);       // fuerza el cierre del menu actual
     static MenuData menu_get_current_data(void);   // Retorna una estructura con datos del menu actual (para mostrar en una UI, etc)
     static DisplayData menu_get_current_display_data(void); // Retorna una estructura con datos para mostrar en pantalla
-    static DisplayData menu_get_current_display_data_legacy(void); // Retorna una estructura con datos para mostrar en pantalla
+    // static DisplayData menu_get_current_display_data_legacy(void); // Retorna una estructura con datos para mostrar en pantalla
 };
 
 
@@ -128,6 +133,6 @@ bool menu_is_current_available(void);      // Retorna true si el menu actual est
 void menu_force_close_current(void);       // fuerza el cierre del menu actual
 MenuData menu_get_current_data(void);   // Retorna una estructura con datos del menu actual (para mostrar en una UI, etc)
 DisplayData menu_get_current_display_data(void); // Retorna una estructura con datos para mostrar en pantalla
-DisplayData menu_get_current_display_data_legacy(void); // Retorna una estructura con datos para mostrar en pantalla
+// DisplayData menu_get_current_display_data_legacy(void); // Retorna una estructura con datos para mostrar en pantalla
 
 #endif // MENU_BASE_H

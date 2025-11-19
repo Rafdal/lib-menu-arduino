@@ -50,11 +50,6 @@ public:
 // (2) FUNCIONES DE MENU
 
     /**
-     * @brief BLOQUEANTE - ejecuta y abre un menu. El programa queda atrapado dentro del mismo hasta que se cierre
-     */
-    void run() override;
-
-    /**
      * @brief Imprimir informacion de debug del menu por Serial
      */
     void print_debug_info() override;
@@ -66,12 +61,19 @@ public:
      */
     MenuData getData() override;
 
+    /**
+     * @brief Get the Display Data (useful for display or frontend)
+     */
+    DisplayData getDisplayData() override;
+
     bool enable_option_roll = false; // Al llegar a la opcion final y avanzar, vuelve a la primera
 
 protected:
     char **option_titles = NULL;                        // titulos de cada opcion
 
 private:
+    void fsm() override;
+    
     menu_callback_t *option_callbacks = NULL;           // callbacks de cada opcion
     uint8_t current_option = 0;                         // opcion actual
     uint8_t n_options = 0;                              // cantidad de opciones
@@ -95,7 +97,7 @@ private:
     using MenuBase::menu_force_close_current;
     using MenuBase::menu_get_current_data;
     using MenuBase::menu_get_current_display_data;
-    using MenuBase::menu_get_current_display_data_legacy;
+    // using MenuBase::menu_get_current_display_data_legacy;
 };
 
 #endif // _MENU_H_
