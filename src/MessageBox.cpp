@@ -45,8 +45,8 @@ void MessageBox::fsm()
     case MENU_STATE_SELECT:
         if (!active)
             break;
-        if(on_select != nullptr){
-            on_select(selected);
+        if(on_select_callback != nullptr){
+            on_select_callback(selected);
         }
         state = MENU_STATE_CLOSE;
         break;

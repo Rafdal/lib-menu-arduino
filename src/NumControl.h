@@ -1,31 +1,40 @@
-// #define MESSAGEBOX_H
-#ifndef MESSAGEBOX_H
-#define MESSAGEBOX_H
+#ifndef NUMCONTROL_H
+#define NUMCONTROL_H
 
 #include <Arduino.h>
 #include "MenuTypes.h"
 #include "MenuBase.h"
 
-class MessageBox : public MenuBase
+class NumControl : public MenuBase
 {
 public:
-    MessageBox(const char* message) : MenuBase(message) {};
-    ~MessageBox(){}
+    NumControl(const char* name, int min_val, int max_val) : MenuBase(name), min_val(min_val), max_val(max_val) {};
+    ~NumControl(){}
 
-    bool exec();
-
-    void on_select(void (*cb)(bool)){
-        this->on_select_callback = cb;
+    void on_change(void (*cb)(int)){
+        this->on_change_callback = cb;
     }
+
+    void set_units(const char* u){
+        units = const_cast<char*>(u);
+    }
+
+    inline int get() { return val; }
+    inline void set(int v) { if(v >= min_val && v <= max_val) val = v; }
 
     DisplayData getDisplayData() override;
 
 private:
     void fsm() override;
-    bool active;
-    bool selected;  
-    bool cancel;
-    void (*on_select_callback)(bool) = nullptr;
+    char* units = nullptr;
+    int min_val = 0;
+    int max_val = 0;
+    void (*on_change_callback)(int) = nullptr;
+    int val = 0;
+    uint8_t current_option = 0;
+    uint8_t n_options = 3;
+    const char* options[3] = {"001", "010", "100"};
+    const int option_multipliers[3] = {1, 10, 100};
 
 private:
     using MenuBase::menu_debug;
@@ -45,4 +54,4 @@ private:
     // using MenuBase::menu_get_current_display_data_legacy;
 };
 
-#endif // MESSAGEBOX_H
+#endif // NUMCONTROL_H
