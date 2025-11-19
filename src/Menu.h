@@ -17,57 +17,10 @@
  ********************************************************************************
  */
 
-// Acciones del menu al ejecutar menu_go_back()
-typedef enum {
-    MENU_ACTION_DO_NOTHING, // No hacer nada al ir hacia atras (no salir)
-    MENU_ACTION_JUST_EXIT,  // Salir del menu al ir hacia atras
-    MENU_ACTION_CALLBACK,   // Ejecutar un callback al ir hacia atras
-} menu_action_t;
+#include "MenuTypes.h"
+#include "MenuBase.h"
 
-// Tipos de display soportados
-typedef enum {
-    MENU_DISPLAY_TYPE_CUSTOM,   // Display personalizado (el usuario se encarga de mostrar los datos)
-    MENU_DISPLAY_TYPE_LCD_16x2,  // Display LCD 16x2
-    MENU_DISPLAY_TYPE_LCD_20x4,  // Display LCD 20x4
-    MENU_DISPLAY_TYPE_SERIAL,   // Display Serial (por consola Serial)
-} menu_display_type_t;
-
-// Estados del menu
-typedef enum {
-    MENU_STATE_CLOSE,       // Cerrar menu | menu cerrado
-    MENU_STATE_AVAILABLE,   // Menu activo en espera
-    MENU_STATE_UP,      // Ir a la opcion superior (estado de transicion)
-    MENU_STATE_DOWN,    // Ir a la opcion inferior (estado de transicion)
-    MENU_STATE_BACK,    // Ir hacia atras (estado de transicion)
-    MENU_STATE_SELECT,   // Seleccionar opcion (estado de transicion)
-    MENU_STATE_OPEN,    // Abrir menu (estado de transicion)
-} menu_state_t;
-
-#define STR_HELPER(x) #x
-#define STR(x) STR_HELPER(x)
-#define STR_LINE __FILE__ ":" STR(__LINE__) " "
-
-typedef void (*menu_callback_t)(void); // Void Callback
-
-// Datos del menu para mostrar en el display
-struct MenuData
-{
-    MenuData(){ n_options = 0; title = NULL; }
-    char **option_titles;   // titulos de cada opcion    
-    const char *title;      // Titulo del menu
-    uint8_t n_options;      // cantidad de opciones
-    uint8_t current_option; // opcion actual
-    uint8_t display_offset; // offset de scroll del display
-};
-
-struct DisplayData
-{
-    DisplayData(){ n_lines = 0; lines = NULL; }
-    char **lines;       // lineas de texto a mostrar
-    uint8_t n_lines;    // cantidad de lineas
-};
-
-class Menu
+class Menu : public MenuBase
 {
 public:
     /**
@@ -99,45 +52,19 @@ public:
     /**
      * @brief BLOQUEANTE - ejecuta y abre un menu. El programa queda atrapado dentro del mismo hasta que se cierre
      */
-    virtual void run();
-
-    /**
-     * @brief Cerrar el menu indicado
-     */
-    void force_close();
+    void run() override;
 
     /**
      * @brief Imprimir informacion de debug del menu por Serial
      */
-    void print_debug_info();
-
-    /**
-     * @brief Consultar si el menu esta activo
-     * 
-     * @retval true - ACTIVO
-     * @retval false - INACTIVO
-     */
-    bool is_available();
-
-    /**
-     * @brief Get the menu state (Ignore this)
-     * 
-     * @return uint8_t menu state
-     */
-    uint8_t getState() { return state; }
+    void print_debug_info() override;
 
     /**
      * @brief Get the Menu Data (useful for display or frontend)
      * 
      * @return MenuData struct with menu title, option titles, option_id, etc
      */
-    MenuData getData();
-
-    // Controles del menu
-    void go_up();
-    void go_down();
-    void go_select();
-    void go_back();
+    MenuData getData() override;
 
     bool enable_option_roll = false; // Al llegar a la opcion final y avanzar, vuelve a la primera
 
@@ -147,54 +74,28 @@ protected:
 private:
     menu_callback_t *option_callbacks = NULL;           // callbacks de cada opcion
     uint8_t current_option = 0;                         // opcion actual
-    uint8_t state = MENU_STATE_CLOSE;                   // evento (estado) actual
-    const char *title;                                  // Titulo del menu
     uint8_t n_options = 0;                              // cantidad de opciones
     menu_action_t exit_action = MENU_ACTION_DO_NOTHING; // accion de salida
     void (*on_exit)(void) = NULL;                       // callback de salida
 
     uint8_t display_offset = 0;                            // offset de scroll del display
+
+private:
+    using MenuBase::menu_debug;
+    using MenuBase::menu_set_event_listener_display;
+    using MenuBase::menu_set_real_time_loop;
+    using MenuBase::menu_set_display_type;
+    using MenuBase::menu_go_up;
+    using MenuBase::menu_go_down;
+    using MenuBase::menu_go_right;
+    using MenuBase::menu_go_left;
+    using MenuBase::menu_go_select;
+    using MenuBase::menu_go_back;
+    using MenuBase::menu_is_current_available;
+    using MenuBase::menu_force_close_current;
+    using MenuBase::menu_get_current_data;
+    using MenuBase::menu_get_current_display_data;
+    using MenuBase::menu_get_current_display_data_legacy;
 };
-
-
-/**
- * @brief Configurar escucha de eventos de control y funciones de visualizacion del menu
- * - EJEMPLO:     menu_set_event_listener_display(keyboard_read, display_update);
- * 
- * @param ev_listener funcion que se ejecuta en TIEMPO REAL para escuchar nuevos eventos (ej: clicks de teclado)
- *                      Colocar por ejemplo, un callback de lectura del joystick
- * @param update_display funcion que se ejecuta cada vez que se deberia actualizar el display que muestra el menu.
- *                      Dentro de esta funcion se deberia llamar menu_get_current_menu_data() para obtener
- *                      los datos del menu actual y asi poder mostrarlos al usuario.
- */
-void menu_set_event_listener_display(menu_callback_t ev_listener, menu_callback_t update_display);
-
-void menu_debug(bool enable); // Habilitar debug por Serial
-
-/**
- * @brief (Opcional) Setear un loop en tiempo real
- * 
- * @param f funcion callback
- */
-void menu_set_real_time_loop(menu_callback_t f);
-
-/**
- * @brief Setear el tipo de display que se usara para mostrar el menu
- */
-void menu_set_display_type(menu_display_type_t display_type);
-
-// (3) FUNCIONES PARA NAVEGAR EN EL MENU (colocar en un callback asociado a un evento de control. ej: Teclado, Joystick)
-void menu_go_up(void);     // Ir a opcion superior
-void menu_go_down(void);   // Ir a opcion inferior
-void menu_go_select(void); // Seleccionar opcion
-void menu_go_back(void);   // Ir hacia atras
-
-
-// (4) FUNCIONES PARA MANIPULAR EL MENU EN EJECUCION ACTUAL
-bool menu_is_current_available(void);      // Retorna true si el menu actual esta activo
-void menu_force_close_current(void);       // fuerza el cierre del menu actual
-MenuData menu_get_current_data(void);   // Retorna una estructura con datos del menu actual (para mostrar en una UI, etc)
-DisplayData menu_get_current_display_data(void); // Retorna una estructura con datos para mostrar en pantalla
-DisplayData menu_get_current_display_data_legacy(void); // Retorna una estructura con datos para mostrar en pantalla
 
 #endif // _MENU_H_

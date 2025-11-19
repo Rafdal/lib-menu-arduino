@@ -1,5 +1,7 @@
 #include "NumForm.h"
 
+#if false
+
 static uint8_t* numFormVal = NULL;
 static uint8_t minFormVal = 0;
 static uint8_t maxFormVal = 0;
@@ -52,3 +54,5 @@ void NumForm::begin(uint8_t min, uint8_t max, const char* incTit,
 	Menu::set_option(2, decTit, numFormDecrement);
 	Menu::set_option(3, backTit, menu_force_close_current );
 }
+
+#endif

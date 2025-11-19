@@ -1,7 +1,8 @@
+#define NUMFORM_H 
 #ifndef NUMFORM_H
 #define NUMFORM_H
 
-#include "Menu.h"
+// #include "Menu.h"
 
 // Must be inside a menu option
 class NumForm : public Menu
