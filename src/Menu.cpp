@@ -7,6 +7,13 @@ static menu_callback_t realTimeLoop = NULL; // Callback en tiempo real (OPCIONAL
 
 static Menu *current_menu = NULL;    // Puntero al menu del contexto actual (en ejecucion)
 
+static bool debug_enabled = false; // Variable para habilitar/deshabilitar debug
+
+void menu_debug(bool enable) {
+    debug_enabled = enable;
+}
+
+static const char* NULL_STR = "(null)";
 
 // Inicializar un menu
 Menu::Menu(uint8_t options, const char* title, menu_callback_t on_exit, menu_action_t action) : title(title)
@@ -36,7 +43,23 @@ Menu::~Menu()
 }
 
 void Menu::set_option(uint8_t option_id, const char* title, menu_callback_t callback){
-    option_titles[option_id] = const_cast<char*>(title);
+    if (option_id >= n_options)
+    {
+        if (debug_enabled) {
+            Serial.println(F("Menu::set_option() - Opcion invalida"));
+            Serial.print(F("\tmenu.title: "));
+            Serial.print(this->title);
+            Serial.print(F(" | option_id: "));
+            Serial.print(option_id);
+            Serial.print(F(" | title: "));
+            Serial.println(title);
+        }
+        return; // Opcion invalida
+    }
+    if (title == NULL)
+        option_titles[option_id] = const_cast<char*>(NULL_STR);
+    else
+        option_titles[option_id] = const_cast<char*>(title);
     option_callbacks[option_id] = callback;
 }
 
@@ -80,8 +103,12 @@ void Menu::run(){
                     option_callbacks[current_option]();
                     current_menu = this; // retomo el control (en caso de que se haya perdido)
                 }
-                else{
-                    // printf("null Callback!\n");
+                else if(debug_enabled){
+                    Serial.println(F("Menu::run() - NULL Callback") );
+                    Serial.print(F("\ttitle: "));
+                    Serial.print(title);
+                    Serial.print(F(" | current_option: "));
+                    Serial.println(current_option);
                 }
                 break;
 
@@ -104,7 +131,11 @@ void Menu::run(){
                 break;
 
             default:
-                // printf("Menu Event Error\n");
+                if (debug_enabled){
+                    Serial.println(F("Menu::run() - INVALID STATE") );
+                    Serial.print(F("\ttitle: "));
+                    Serial.println(title);
+                }
                 break;
             }
 

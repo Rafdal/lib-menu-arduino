@@ -143,6 +143,8 @@ private:
  */
 void menu_set_event_listener_display(menu_callback_t ev_listener, menu_callback_t update_display);
 
+void menu_debug(bool enable); // Habilitar debug por Serial
+
 /**
  * @brief (Opcional) Setear un loop en tiempo real
  * 
