@@ -24,6 +24,14 @@ typedef enum {
     MENU_ACTION_CALLBACK,   // Ejecutar un callback al ir hacia atras
 } menu_action_t;
 
+// Tipos de display soportados
+typedef enum {
+    MENU_DISPLAY_TYPE_CUSTOM,   // Display personalizado (el usuario se encarga de mostrar los datos)
+    MENU_DISPLAY_TYPE_LCD_16x2,  // Display LCD 16x2
+    MENU_DISPLAY_TYPE_LCD_20x4,  // Display LCD 20x4
+    MENU_DISPLAY_TYPE_SERIAL,   // Display Serial (por consola Serial)
+} menu_display_type_t;
+
 // Estados del menu
 typedef enum {
     MENU_STATE_CLOSE,       // Cerrar menu | menu cerrado
@@ -31,8 +39,13 @@ typedef enum {
     MENU_STATE_UP,      // Ir a la opcion superior (estado de transicion)
     MENU_STATE_DOWN,    // Ir a la opcion inferior (estado de transicion)
     MENU_STATE_BACK,    // Ir hacia atras (estado de transicion)
-    MENU_STATE_SELECT   // Seleccionar opcion (estado de transicion)
+    MENU_STATE_SELECT,   // Seleccionar opcion (estado de transicion)
+    MENU_STATE_OPEN,    // Abrir menu (estado de transicion)
 } menu_state_t;
+
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+#define STR_LINE __FILE__ ":" STR(__LINE__) " "
 
 typedef void (*menu_callback_t)(void); // Void Callback
 
@@ -44,8 +57,15 @@ struct MenuData
     const char *title;      // Titulo del menu
     uint8_t n_options;      // cantidad de opciones
     uint8_t current_option; // opcion actual
+    uint8_t display_offset; // offset de scroll del display
 };
 
+struct DisplayData
+{
+    DisplayData(){ n_lines = 0; lines = NULL; }
+    char **lines;       // lineas de texto a mostrar
+    uint8_t n_lines;    // cantidad de lineas
+};
 
 class Menu
 {
@@ -85,6 +105,11 @@ public:
      * @brief Cerrar el menu indicado
      */
     void force_close();
+
+    /**
+     * @brief Imprimir informacion de debug del menu por Serial
+     */
+    void print_debug_info();
 
     /**
      * @brief Consultar si el menu esta activo
@@ -128,6 +153,7 @@ private:
     menu_action_t exit_action = MENU_ACTION_DO_NOTHING; // accion de salida
     void (*on_exit)(void) = NULL;                       // callback de salida
 
+    uint8_t display_offset = 0;                            // offset de scroll del display
 };
 
 
@@ -152,6 +178,11 @@ void menu_debug(bool enable); // Habilitar debug por Serial
  */
 void menu_set_real_time_loop(menu_callback_t f);
 
+/**
+ * @brief Setear el tipo de display que se usara para mostrar el menu
+ */
+void menu_set_display_type(menu_display_type_t display_type);
+
 // (3) FUNCIONES PARA NAVEGAR EN EL MENU (colocar en un callback asociado a un evento de control. ej: Teclado, Joystick)
 void menu_go_up(void);     // Ir a opcion superior
 void menu_go_down(void);   // Ir a opcion inferior
@@ -163,5 +194,7 @@ void menu_go_back(void);   // Ir hacia atras
 bool menu_is_current_available(void);      // Retorna true si el menu actual esta activo
 void menu_force_close_current(void);       // fuerza el cierre del menu actual
 MenuData menu_get_current_data(void);   // Retorna una estructura con datos del menu actual (para mostrar en una UI, etc)
+DisplayData menu_get_current_display_data(void); // Retorna una estructura con datos para mostrar en pantalla
+DisplayData menu_get_current_display_data_legacy(void); // Retorna una estructura con datos para mostrar en pantalla
 
 #endif // _MENU_H_
