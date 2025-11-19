@@ -1,4 +1,4 @@
-#define MESSAGEBOX_H
+// #define MESSAGEBOX_H
 #ifndef MESSAGEBOX_H
 #define MESSAGEBOX_H
 
@@ -9,7 +9,7 @@
 class MessageBox : public MenuBase
 {
 public:
-    bool MessageBox(const char* message);
+    MessageBox(const char* message) : MenuBase(message) {};
     ~MessageBox(){}
 
     bool exec();
@@ -18,12 +18,13 @@ public:
         this->on_select = cb;
     }
 
-    MenuData getData() override;
+    DisplayData getDisplayData() override;
 
-    void print_debug_info() override;
 private:
     void fsm() override;
-    bool selected = false;
+    bool active;
+    bool selected;  
+    bool cancel;
     void (*on_select)(bool) = nullptr;
 
 private:

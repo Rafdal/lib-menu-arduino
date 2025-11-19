@@ -44,6 +44,7 @@ void Menu::fsm(){
         current_menu = this;            // Setear el menu como menu actual (en foco)
         current_option=0;               // Focusear la primera opcion por defecto
         break;
+    case MENU_STATE_RENDER:
     case MENU_STATE_LEFT:
     case MENU_STATE_RIGHT:
         // No implementado en este menu

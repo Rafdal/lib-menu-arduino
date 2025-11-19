@@ -35,6 +35,7 @@ typedef enum {
     MENU_STATE_BACK,    // Ir hacia atras (estado de transicion grafica)
     MENU_STATE_SELECT,   // Seleccionar opcion (estado de transicion grafica)
     MENU_STATE_OPEN,    // Abrir menu (estado de transicion grafica)
+    MENU_STATE_RENDER,  // Render (opcional)
 } menu_state_t;
 
 // Datos del menu para mostrar en el display

@@ -8,6 +8,7 @@
 class MenuBase
 {
 public:
+    MenuBase() : title(NULL_STR) {}
     MenuBase(const char* title) : title(title) {}
     virtual ~MenuBase() {}
 
@@ -36,12 +37,14 @@ public:
      */
     inline uint8_t getState() { return state; }
 
-    virtual MenuData getData() = 0;
+    virtual MenuData getData(){ return MenuData(); }
+
+    virtual DisplayData getDisplayData() = 0;
 
     /**
      * @brief Imprimir informacion de debug del menu por Serial
      */
-    virtual void print_debug_info() = 0;
+    virtual void print_debug_info();
 
     // Controles del menu
     void go_up();
@@ -53,9 +56,17 @@ public:
 
 protected:
     virtual void fsm() = 0;
-    virtual DisplayData getDisplayData() = 0;
     uint8_t state = MENU_STATE_CLOSE;                   // evento (estado) actual
     const char *title;                                  // Titulo del menu
+
+    uint16_t timeout_ms = 0;
+    unsigned long timeout_start = 0;
+    uint8_t next_state = MENU_STATE_AVAILABLE;
+    void set_timeout_state_transition(uint16_t ms, uint8_t _next_state) {
+        timeout_ms = ms;
+        next_state = _next_state;
+        timeout_start = millis();
+    }
 
 protected:
     static const char* NULL_STR;

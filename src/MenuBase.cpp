@@ -24,13 +24,22 @@ void MenuBase::run(void){
         while (state != MENU_STATE_CLOSE) // Mientras el menu no se haya cerrado o este cerrado
         {        
             event_listener();                   // escuchar cambios de estado (bajar,seleccionar,cerrar,etc)
-
+            
+            if (timeout_ms > 0)
+            {
+                if (millis() - timeout_start >= timeout_ms)
+                {
+                    state = next_state; // Cambiar al siguiente estado
+                    timeout_ms = 0;     // Desactivar el timeout
+                }
+            }
+            
             fsm();  // Implementacion definida por el usuario
 
             // Si estamos en un estado de transicion, actualizamos el display
             if(state != MENU_STATE_AVAILABLE && state != MENU_STATE_CLOSE){
-                state = MENU_STATE_AVAILABLE;
                 update_display();
+                state = MENU_STATE_AVAILABLE;
             }
 
             if(realTimeLoop != NULL) // Si hay loop en tiempo real, ejecutar
@@ -113,6 +122,13 @@ void MenuBase::go_back(void){
 
 void MenuBase::menu_debug(bool enable) {
     debug_enabled = enable;
+}
+
+void MenuBase::print_debug_info() {
+    Serial.print(F("MenuBase Debug Info - title: \'"));
+    Serial.print(title);
+    Serial.print(F("\' | state: "));
+    Serial.println(state);
 }
 
 void MenuBase::menu_set_display_type(menu_display_type_t _display_type)
