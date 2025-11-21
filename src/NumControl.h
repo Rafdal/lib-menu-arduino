@@ -19,10 +19,22 @@ public:
         units = const_cast<char*>(u);
     }
 
-    inline int get() { return val; }
-    inline void set(int v) { if(v >= min_val && v <= max_val) val = v; }
+    inline int get_value() { return val; }
+    inline void set_value(int v) { if(v >= min_val && v <= max_val) val = v; }
 
     DisplayData getDisplayData() override;
+
+    void set_option_labels(const char* opt1, const char* opt2, const char* opt3) {
+        options[0] = const_cast<char*>(opt1);
+        options[1] = const_cast<char*>(opt2);
+        options[2] = const_cast<char*>(opt3);
+    }
+
+    void set_option_multipliers(int mul1, int mul2, int mul3) {
+        option_multipliers[0] = mul1;
+        option_multipliers[1] = mul2;
+        option_multipliers[2] = mul3;
+    }
 
 private:
     void fsm() override;
@@ -33,8 +45,10 @@ private:
     int val = 0;
     uint8_t current_option = 0;
     uint8_t n_options = 3;
-    const char* options[3] = {"001", "010", "100"};
-    const int option_multipliers[3] = {1, 10, 100};
+    // const char* options[3] = {"001", "010", "100"};
+    // const int option_multipliers[3] = {1, 10, 100};
+    char* options[3] = {nullptr, nullptr, nullptr};
+    int option_multipliers[3] = {1, 10, 100};
 
 private:
     using MenuBase::menu_debug;
