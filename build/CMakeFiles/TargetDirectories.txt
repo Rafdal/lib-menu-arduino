@@ -1,0 +1,5 @@
+D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/menu_arduino.dir
+D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/arduino_pc_stub.dir
+D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/menu_console.dir
+D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/edit_cache.dir
+D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/rebuild_cache.dir

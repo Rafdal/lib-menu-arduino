@@ -1,0 +1,44 @@
+[
+{
+  "directory": "D:/VSCode_Proyects/lib-menu-arduino/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/VSCode_Proyects/lib-menu-arduino/src -ID:/VSCode_Proyects/lib-menu-arduino/pc-arduino-stub -g -std=c++17 -Wall -Wextra -pedantic -o CMakeFiles\\menu_arduino.dir\\src\\Menu.cpp.obj -c D:\\VSCode_Proyects\\lib-menu-arduino\\src\\Menu.cpp",
+  "file": "D:/VSCode_Proyects/lib-menu-arduino/src/Menu.cpp",
+  "output": "D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/menu_arduino.dir/src/Menu.cpp.obj"
+},
+{
+  "directory": "D:/VSCode_Proyects/lib-menu-arduino/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/VSCode_Proyects/lib-menu-arduino/src -ID:/VSCode_Proyects/lib-menu-arduino/pc-arduino-stub -g -std=c++17 -Wall -Wextra -pedantic -o CMakeFiles\\menu_arduino.dir\\src\\MenuBase.cpp.obj -c D:\\VSCode_Proyects\\lib-menu-arduino\\src\\MenuBase.cpp",
+  "file": "D:/VSCode_Proyects/lib-menu-arduino/src/MenuBase.cpp",
+  "output": "D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/menu_arduino.dir/src/MenuBase.cpp.obj"
+},
+{
+  "directory": "D:/VSCode_Proyects/lib-menu-arduino/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/VSCode_Proyects/lib-menu-arduino/src -ID:/VSCode_Proyects/lib-menu-arduino/pc-arduino-stub -g -std=c++17 -Wall -Wextra -pedantic -o CMakeFiles\\menu_arduino.dir\\src\\MessageBox.cpp.obj -c D:\\VSCode_Proyects\\lib-menu-arduino\\src\\MessageBox.cpp",
+  "file": "D:/VSCode_Proyects/lib-menu-arduino/src/MessageBox.cpp",
+  "output": "D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/menu_arduino.dir/src/MessageBox.cpp.obj"
+},
+{
+  "directory": "D:/VSCode_Proyects/lib-menu-arduino/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/VSCode_Proyects/lib-menu-arduino/src -ID:/VSCode_Proyects/lib-menu-arduino/pc-arduino-stub -g -std=c++17 -Wall -Wextra -pedantic -o CMakeFiles\\menu_arduino.dir\\src\\NumControl.cpp.obj -c D:\\VSCode_Proyects\\lib-menu-arduino\\src\\NumControl.cpp",
+  "file": "D:/VSCode_Proyects/lib-menu-arduino/src/NumControl.cpp",
+  "output": "D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/menu_arduino.dir/src/NumControl.cpp.obj"
+},
+{
+  "directory": "D:/VSCode_Proyects/lib-menu-arduino/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/VSCode_Proyects/lib-menu-arduino/src -ID:/VSCode_Proyects/lib-menu-arduino/pc-arduino-stub -g -std=c++17 -Wall -Wextra -pedantic -o CMakeFiles\\menu_arduino.dir\\src\\NumForm.cpp.obj -c D:\\VSCode_Proyects\\lib-menu-arduino\\src\\NumForm.cpp",
+  "file": "D:/VSCode_Proyects/lib-menu-arduino/src/NumForm.cpp",
+  "output": "D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/menu_arduino.dir/src/NumForm.cpp.obj"
+},
+{
+  "directory": "D:/VSCode_Proyects/lib-menu-arduino/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/VSCode_Proyects/lib-menu-arduino/pc-arduino-stub -g -std=c++17 -Wall -Wextra -pedantic -o CMakeFiles\\arduino_pc_stub.dir\\pc-arduino-stub\\Arduino.cpp.obj -c D:\\VSCode_Proyects\\lib-menu-arduino\\pc-arduino-stub\\Arduino.cpp",
+  "file": "D:/VSCode_Proyects/lib-menu-arduino/pc-arduino-stub/Arduino.cpp",
+  "output": "D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/arduino_pc_stub.dir/pc-arduino-stub/Arduino.cpp.obj"
+},
+{
+  "directory": "D:/VSCode_Proyects/lib-menu-arduino/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -ID:/VSCode_Proyects/lib-menu-arduino/src -ID:/VSCode_Proyects/lib-menu-arduino/pc-arduino-stub -g -std=c++17 -Wall -Wextra -pedantic -o CMakeFiles\\menu_console.dir\\tests\\menu_console.cpp.obj -c D:\\VSCode_Proyects\\lib-menu-arduino\\tests\\menu_console.cpp",
+  "file": "D:/VSCode_Proyects/lib-menu-arduino/tests/menu_console.cpp",
+  "output": "D:/VSCode_Proyects/lib-menu-arduino/build/CMakeFiles/menu_console.dir/tests/menu_console.cpp.obj"
+}
+]

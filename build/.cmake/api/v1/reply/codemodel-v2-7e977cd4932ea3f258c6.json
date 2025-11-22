@@ -1,0 +1,78 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "lib_menu_arduino",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "arduino_pc_stub::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-arduino_pc_stub-Debug-fbc3986c634fc32f947e.json",
+					"name" : "arduino_pc_stub",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "menu_arduino::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-menu_arduino-Debug-9f09e0dbad33cbf60687.json",
+					"name" : "menu_arduino",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "menu_console::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-menu_console-Debug-86791747cf6d20284d0b.json",
+					"name" : "menu_console",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/VSCode_Proyects/lib-menu-arduino/build",
+		"source" : "D:/VSCode_Proyects/lib-menu-arduino"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 8
+	}
+}
