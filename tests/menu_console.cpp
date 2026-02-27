@@ -7,8 +7,10 @@
 Menu mainMenu(4, "Console Menu");
 
 void update_display();
+void setup();
+void loop();
 
-int main()
+void setup()
 {
     menu_set_display_type(MENU_DISPLAY_TYPE_LCD_20x4);
     menu_set_event_listener_display(keyboard_listener, update_display);
@@ -32,10 +34,11 @@ int main()
     mainMenu.set_option(3, "Exit", menu_force_close_current);
 
     Serial.println(F("Console menu ready. Press any supported key to interact."));
-    mainMenu.run();
+}
 
-    Serial.println(F("Menu finished. Bye!"));
-    return 0;
+void loop()
+{
+    mainMenu.run();
 }
 
 
@@ -52,5 +55,5 @@ void update_display()
     
     std::cout << std::endl;
 
-    debug.printAll();
+    // debug.printAll();
 }

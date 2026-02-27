@@ -58,6 +58,7 @@ endif()
 if (LIB_MENU_BUILD_CONSOLE)
     add_executable(menu_console
         tests/menu_console.cpp
+        tests/menu_console_runner.cpp
     )
 
     target_link_libraries(menu_console PRIVATE menu_arduino Threads::Threads)
