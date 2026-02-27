@@ -12,7 +12,9 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/ninja-debug",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "LIB_MENU_USE_PC_STUB": "ON",
+                "LIB_MENU_BUILD_CONSOLE": "ON"
             }
         },
         {
@@ -21,7 +23,9 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/ninja-release",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
+                "CMAKE_BUILD_TYPE": "Release",
+                "LIB_MENU_USE_PC_STUB": "ON",
+                "LIB_MENU_BUILD_CONSOLE": "ON"
             }
         }
     ],

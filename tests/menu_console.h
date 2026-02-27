@@ -140,8 +140,7 @@ void handle_arrow_key()
         break;
     }
 #else
-    // Non-Windows terminals already emit escape sequences that
-    // will be handled by the default case of keyboard_listener.
+    // Linux arrow-key escape sequences are handled in keyboard_listener.
 #endif
 }
 
@@ -156,6 +155,39 @@ void keyboard_listener()
 #if defined(_WIN32)
     if (ch == 0 || ch == static_cast<char>(224)) {
         handle_arrow_key();
+        return;
+    }
+#else
+    if (static_cast<unsigned char>(ch) == 27) {
+        char next = 0;
+        if (try_read_char(next) && next == '[') {
+            char arrow = 0;
+            if (try_read_char(arrow)) {
+                switch (arrow) {
+                case 'A':
+                    menu_go_up();
+                    debug.log("[Debug] Up arrow key detected");
+                    return;
+                case 'B':
+                    menu_go_down();
+                    debug.log("[Debug] Down arrow key detected");
+                    return;
+                case 'D':
+                    menu_go_left();
+                    debug.log("[Debug] Left arrow key detected");
+                    return;
+                case 'C':
+                    menu_go_right();
+                    debug.log("[Debug] Right arrow key detected");
+                    return;
+                default:
+                    break;
+                }
+            }
+        }
+
+        menu_go_back();
+        debug.log("[Debug] Back key detected");
         return;
     }
 #endif

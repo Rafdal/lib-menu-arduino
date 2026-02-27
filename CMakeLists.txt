@@ -2,8 +2,15 @@ cmake_minimum_required(VERSION 3.20)
 
 project(lib_menu_arduino LANGUAGES CXX)
 
-option(LIB_MENU_USE_PC_STUB "Include the desktop Arduino compatibility shim" ON)
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+include(ArduinoPcStub)
+
+option(LIB_MENU_USE_PC_STUB "Include the desktop Arduino compatibility shim" OFF)
 option(LIB_MENU_BUILD_CONSOLE "Build the interactive console harness" ON)
+
+if (LIB_MENU_BUILD_CONSOLE AND NOT LIB_MENU_USE_PC_STUB)
+    message(FATAL_ERROR "menu_console requires LIB_MENU_USE_PC_STUB=ON")
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -23,7 +30,6 @@ add_library(menu_arduino STATIC
 target_include_directories(menu_arduino
     PUBLIC
         ${PROJECT_SOURCE_DIR}/src
-    $<$<BOOL:${LIB_MENU_USE_PC_STUB}>:${PROJECT_SOURCE_DIR}/pc-arduino-stub>
 )
 
 target_compile_features(menu_arduino PUBLIC cxx_std_17)
@@ -35,16 +41,16 @@ else()
 endif()
 
 if (LIB_MENU_USE_PC_STUB)
-    add_library(arduino_pc_stub STATIC pc-arduino-stub/Arduino.cpp)
-    target_include_directories(arduino_pc_stub PUBLIC ${PROJECT_SOURCE_DIR}/pc-arduino-stub)
+    add_arduino_pc_stub(
+        TARGET_NAME arduino_pc_stub
+        ROOT_DIR ${PROJECT_SOURCE_DIR}/pc-arduino-stub
+    )
 
-    if (MSVC)
-        target_compile_options(arduino_pc_stub PRIVATE /W4 /permissive-)
-    else()
-        target_compile_options(arduino_pc_stub PRIVATE -Wall -Wextra -pedantic)
-    endif()
-
-    target_link_libraries(menu_arduino PUBLIC arduino_pc_stub)
+    link_arduino_pc_stub(
+        TARGET menu_arduino
+        STUB_TARGET arduino_pc_stub
+        VISIBILITY PUBLIC
+    )
 else()
     message(STATUS "LIB_MENU_USE_PC_STUB=OFF - make sure your toolchain provides <Arduino.h>")
 endif()
