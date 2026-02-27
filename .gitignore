@@ -1,0 +1,6 @@
+build/
+
+# CMake generated files
+CMakeUserPresets.json
+Testing/
+compile_commands.json
