@@ -1,6 +1,6 @@
+#include <Arduino.h>
 
-#define DEBUG_PRINT_BUFFER_SIZE 5
-#include "menu_console.h"
+#include "arduino_console_emulator.h"
 
 #include "MessageBox.h"
 

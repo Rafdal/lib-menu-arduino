@@ -18,14 +18,14 @@ basico es el siguiente:
 
 1. Configurar CMake en modo debug: `cmake --preset ninja-debug`
 2. Compilar el ejecutable: `cmake --build --preset ninja-debug`
-3. Ejecutar la prueba interactiva: `build/ninja-debug/menu_console`
+3. Ejecutar la prueba interactiva: `build/ninja-debug/arduino_console_emulator`
 
 Para depurar paso a paso desde VS Code basta con seleccionar el preset
 `ninja-debug` dentro de la extension *CMake Tools* y usar la accion *Debug* sobre
-el objetivo `menu_console`. El modo *Release* (`ninja-release`) esta disponible
+el objetivo `arduino_console_emulator`. El modo *Release* (`ninja-release`) esta disponible
 con los mismos comandos de arriba.
 
-### Controles del ejecutable `menu_console`
+### Controles del ejecutable `arduino_console_emulator`
 
 - `W` / `S` o flechas: navegar entre opciones.
 - `Enter` o barra espaciadora: seleccionar la opcion.

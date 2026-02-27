@@ -1,5 +1,5 @@
-#ifndef MENU_CONSOLE_H
-#define MENU_CONSOLE_H
+#ifndef ARDUINO_CONSOLE_EMULATOR_H
+#define ARDUINO_CONSOLE_EMULATOR_H
 
 
 #include <algorithm>
@@ -240,4 +240,4 @@ void clear_console()
 #endif
 }
 
-#endif // MENU_CONSOLE_H
+#endif // ARDUINO_CONSOLE_EMULATOR_H

@@ -9,7 +9,7 @@ option(LIB_MENU_USE_PC_STUB "Include the desktop Arduino compatibility shim" OFF
 option(LIB_MENU_BUILD_CONSOLE "Build the interactive console harness" ON)
 
 if (LIB_MENU_BUILD_CONSOLE AND NOT LIB_MENU_USE_PC_STUB)
-    message(FATAL_ERROR "menu_console requires LIB_MENU_USE_PC_STUB=ON")
+    message(FATAL_ERROR "arduino_console_emulator requires LIB_MENU_USE_PC_STUB=ON")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
@@ -56,16 +56,16 @@ else()
 endif()
 
 if (LIB_MENU_BUILD_CONSOLE)
-    add_executable(menu_console
-        tests/menu_console.cpp
-        tests/menu_console_runner.cpp
+    add_executable(arduino_console_emulator
+        tests/arduino_console_emulator.cpp
+        tests/arduino_console_emulator_runner.cpp
     )
 
-    target_link_libraries(menu_console PRIVATE menu_arduino Threads::Threads)
+    target_link_libraries(arduino_console_emulator PRIVATE menu_arduino Threads::Threads)
 
     if (MSVC)
-        target_compile_options(menu_console PRIVATE /W4 /permissive-)
+        target_compile_options(arduino_console_emulator PRIVATE /W4 /permissive-)
     else()
-        target_compile_options(menu_console PRIVATE -Wall -Wextra -pedantic)
+        target_compile_options(arduino_console_emulator PRIVATE -Wall -Wextra -pedantic)
     endif()
 endif()
